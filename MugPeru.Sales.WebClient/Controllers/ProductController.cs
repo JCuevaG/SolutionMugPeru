@@ -19,6 +19,7 @@ namespace MugPeru.Sales.WebClient.Controllers
             return View();
         }
 
+        [HttpPost]
         public JsonResult GetProducts(string productNameFilter, int currentPage)
         {
             int records = 10;
@@ -38,7 +39,7 @@ namespace MugPeru.Sales.WebClient.Controllers
                 TotalRecords = pagination.TotalRecords,
                 ProductList = productList.ConvertToViewModel()
             };
-
+            return Json(viewModel);
         }
 
     }

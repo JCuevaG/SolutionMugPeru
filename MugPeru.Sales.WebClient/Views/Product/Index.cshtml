@@ -13,6 +13,10 @@
             self.ProductList = ko.observableArray();
             self.CurrentPage = ko.observable(1);
             self.TotalRecords = ko.observable(0);
+            self.Search = function () {
+                alert('Buscando Productos con el filtro' + self.ProductFilter());
+            }
+
         }
 
         var viewModel;
@@ -21,6 +25,28 @@
             ko.applyBindings(viewModel);
 
         })
+
+        function SearchProducts() {
+            var callAjax = $.ajax({
+                url: '@Url.Action("GetProducts", "Product")',
+                type: 'POST',
+                dataType: 'json',
+                contentType: 'application/json; charset=utf-8',
+                cache: false,
+                data:'{"productNameFilter":"'+ viewModel.ProductFilter() + '","currentPage":' + viewModel.CurrentPage()+ "}"
+            });
+
+            callAjax.done(function (data) {
+                viewModel.CurrentPage(data.CurrentPage);
+                viewModel.TotalRecords(data.TotalRecords);
+                viewModel.ProductList(data.ProductList);
+
+            });
+
+            callAjax.fail(function (data) {
+                alert('Error al consultar los registros')
+            });
+        }
 
     </script>
 }
@@ -34,7 +60,7 @@
     <div>
         Product:
         <input type="text" data-bind="value:ProductFilter" />
-        <button type="button">Buscar</button>
+        <button type="button" data-bind="click: SearchProducts">Buscar</button>
 
     </div>
     <h1><span data-bind="text:ProductFilter"></span></h1>
@@ -43,8 +69,24 @@
             <tr>
                 <th>Descripcion</th>
                 <th>Precio</th>
-                <th></th>
+                <th></th>5
             </tr>
         </thead>
+        <tbody data-bind="foreach : ProductList">
+            <tr>
+                <td><span data-bind="text:Name"></span></td>
+                <td><span data-bind="text:UnitPrice"></span></td>
+                <td><span data-bind="text:Stock"></span></td>
+            </tr>
+        </tbody>
     </table>
+
+    <div>
+        Pagina Acutal : <b><span data-bind="text:CurrentPage"></span></b>
+
+    </div>
+
+    <div>
+        Total Paginas: <b><span data-bind="text:TotalRecords"></span></b>
+    </div>
 </fieldset>
