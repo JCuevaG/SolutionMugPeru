@@ -1,0 +1,50 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+
+@section scripts{
+
+    <script src="~/Scripts/knockout-3.3.0.js"></script>
+    <script type="text/javascript">
+        function ProductListViewModel() {
+            var self = this;
+            self.ProductFilter = ko.observable("");
+            self.ProductList = ko.observableArray();
+            self.CurrentPage = ko.observable(1);
+            self.TotalRecords = ko.observable(0);
+        }
+
+        var viewModel;
+        $(document).ready(function () {
+            viewModel = new ProductListViewModel();
+            ko.applyBindings(viewModel);
+
+        })
+
+    </script>
+}
+
+<h2>Catálogo de Productos - MugPeru</h2>
+
+<fieldset>
+    <legend>
+        Busqueda de Productos
+    </legend>
+    <div>
+        Product:
+        <input type="text" data-bind="value:ProductFilter" />
+        <button type="button">Buscar</button>
+
+    </div>
+    <h1><span data-bind="text:ProductFilter"></span></h1>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Descripcion</th>
+                <th>Precio</th>
+                <th></th>
+            </tr>
+        </thead>
+    </table>
+</fieldset>
